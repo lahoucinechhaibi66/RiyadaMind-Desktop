@@ -1,0 +1,28 @@
+name: Build Desktop App
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest # نظام ويندوز مطلوب لتطبيقات سطح المكتب
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x' # قم بتغييره إذا كان مشروعك يستخدم إصداراً أقدم مثل 6.0 أو 7.0
+
+    - name: Publish .NET Project
+      # قم بتعديل مسار ملف .csproj أدناه ليتطابق مع مسارك
+      run: dotnet publish "Your_Folder/Riyada Mind.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o ./publish_output
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Riyada-Mind-App
+        path: ./publish_output/
